@@ -1,16 +1,11 @@
-﻿using API.Context;
-using API.Repositories.Interfaces;
+﻿using API2.Context;
+using API2.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading;
 
-namespace API.Repositories.Implementations
+namespace API2.Repositories.Implementations
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        //protected readonly PostgreContext _configuration;
-        //protected readonly IPostgreContext _context;
-        //The following variable is going to hold the EFCoreDbContext instance
         protected readonly PostgreContext _context;
         protected readonly DbSet<T> _dbSet;
         public readonly ILogger _logger;
@@ -37,44 +32,15 @@ namespace API.Repositories.Implementations
             return await _dbSet.FindAsync(id);
         }
 
-        //public GenericRepository(PostgreContext Configuration)
-        //{
-        //    _configuration = Configuration;
+        public virtual Task<bool> Upsert(T entity)
+        {
+            throw new NotImplementedException();
+        }
 
-        //    _dbSet = _configuration.Set<T>();
-        //}
-
-        //public GenericRepository(IPostgreContext configuration)
-        //{
-        //    this.configuration = configuration;
-        //}
-
-        //public async Task<IEnumerable<T>> GetAllAsync()
-        //{
-        //    return await _dbSet.ToListAsync();
-        //}
-
-        //public async Task<T?> GetByIdAsync(object Id)
-        //{
-        //    return await _dbSet.FindAsync(Id);
-        //}
-
-        //public async Task InsertAsync(T Entity)
-        //{
-        //    await _dbSet.AddAsync(Entity);
-        //}
-
-        //public async Task UpdateAsync(T Entity)
-        //{
-        //    _dbSet.Update(Entity);
-        //}
-
-        //public async Task DeleteAsync(object Id)
-        //{
-        //    var entity = await _dbSet.FindAsync(Id);
-        //    if (entity != null)
-        //        _dbSet.Remove(entity);
-        //}
+        public virtual Task<bool> Delete(Guid id)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<int> SaveAsync(CancellationToken cancellationToken = default(CancellationToken))
         {

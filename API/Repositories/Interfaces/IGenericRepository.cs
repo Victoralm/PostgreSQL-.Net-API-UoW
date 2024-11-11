@@ -1,4 +1,4 @@
-﻿namespace API.Repositories.Interfaces
+﻿namespace API2.Repositories.Interfaces
 {
     public interface IGenericRepository <T> where T : class
     {

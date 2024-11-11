@@ -1,12 +1,12 @@
-﻿using API.Repositories.Implementations;
-using API.Repositories.Interfaces;
+﻿using API2.Repositories.Implementations;
 
-namespace API.UnitOfWork.Interfaces
+namespace API2.UnitOfWork.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         ////Define the Specific Repositories
-        UserRepository Users { get; }
+        ProductRepository Products { get; }
+        CategoryRepository Category { get; }
 
         Task CompleteAsync();
     }

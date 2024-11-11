@@ -134,3 +134,39 @@ If needs to be recreated from scratch:
 ```powershell
 Remove-Migration
 ```
+
+##### Reset Migrations
+
+```powershell
+Delete the state: Delete the migrations folder in your project; And
+Delete the __MigrationHistory table in your database (may be under system tables); Then
+Run the following command in the Package Manager Console:
+
+Enable-Migrations -EnableAutomaticMigrations -Force
+Use with or without -EnableAutomaticMigrations
+
+And finally, you can run:
+
+Add-Migration Initial
+
+Also, I had to delete a table. Since Migrations was stopping working when finding an pre-existant relationship:
+42P07: relação "AspNetRoles" já existe
+```
+
+#### Needs to be added
+
+> A new DbSet needs to be added to the **Context** before run a new `Add-Migration <name>`
+
+```csharp
+public DbSet<Product> Products { get; set; }
+```
+
+> A new repository needs to be added to the **UnitOfWork constructor** before been accessible by a controller
+
+```csharp
+Products = new ProductRepository(context, _logger);
+```
+
+### EF x Dapper Benchmark
+
+[Youtube](https://www.youtube.com/watch?v=leqze5-pYUA)

@@ -1,56 +1,31 @@
-﻿using API.Context;
-using API.Repositories.Implementations;
-using API.Repositories.Interfaces;
-using API.UnitOfWork.Interfaces;
+﻿using API2.Context;
+using API2.Repositories.Implementations;
+using API2.UnitOfWork.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace API.UnitOfWork.Implementations
+namespace API2.UnitOfWork.Implementations
 {
     public class UnitOfWork : IUnitOfWork
     {
-        //public UserRepository Users => throw new NotImplementedException();
-
-        //public void Dispose()
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         private readonly PostgreContext _context;
         private readonly ILogger _logger;
 
-        public UserRepository Users { get; private set; }
-        //public UserRepository Users => new
+        public ProductRepository Products { get; private set; }
+        public CategoryRepository Category { get; private set; }
 
         public UnitOfWork(PostgreContext context, ILoggerFactory loggerFactory)
         {
             _context = context;
             _logger = loggerFactory.CreateLogger("logs");
 
-            Users = new UserRepository(context, _logger);
+            Products = new ProductRepository(context, _logger);
+            Category = new CategoryRepository(context, _logger);
         }
 
         public async Task CompleteAsync()
         {
-            //using var transaction = _context.Database.BeginTransaction();
             await _context.SaveChangesAsync();
-            // Commit transaction if all commands succeed, transaction will auto-rollback
-            // when disposed if either commands fails
-            //    transaction.Commit();
-            //    Dispose();
         }
-
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
-
-        //public Task CompleteAsync()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void Dispose()
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

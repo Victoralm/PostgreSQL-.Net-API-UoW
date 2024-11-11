@@ -1,13 +1,13 @@
 ﻿using API2.Entities;
-using API2.Repositories.Interfaces;
-using API2.UnitOfWork.Implementations;
 using API2.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API2.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    //[Authorize]
     public class ProductsController : Controller
     {
         private readonly ILogger<ProductsController> _logger;
@@ -20,10 +20,11 @@ namespace API2.Controllers
         }
 
         [HttpGet]
+        //[AllowAnonymous]
         public async Task<IActionResult> Get()
         {
-            var products = await _unitOfWork.Products.GetProductsAsync();
-            return Ok(products);
+            var items = await _unitOfWork.Products.GetProductsAsync();
+            return Ok(items);
         }
 
         [HttpGet("{id}")]
@@ -38,7 +39,7 @@ namespace API2.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(Product product)
+        public async Task<IActionResult> Post(Product product)
         {
             if (ModelState.IsValid)
             {
@@ -51,6 +52,33 @@ namespace API2.Controllers
             }
 
             return new JsonResult("Somethign Went wrong") { StatusCode = 500 };
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateItem(Guid id, Product product)
+        {
+            if (id != product.Id)
+                return BadRequest();
+
+            await _unitOfWork.Products.Upsert(product);
+            await _unitOfWork.CompleteAsync();
+
+            // Following up the REST standart on update we need to return NoContent
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteItem(Guid id)
+        {
+            var item = await _unitOfWork.Products.GetById(id);
+
+            if (item == null)
+                return BadRequest();
+
+            await _unitOfWork.Products.Delete(id);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(item);
         }
     }
 }

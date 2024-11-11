@@ -1,9 +1,13 @@
-﻿using API.Entities;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using API2.Entities;
+using Npgsql;
+using System.Data;
 
-namespace API.Context
+namespace API2.Context
 {
-    public class PostgreContext : DbContext
+    public class PostgreContext : IdentityDbContext<IdentityUser>
     {
         protected readonly IConfiguration Configuration;
 
@@ -22,10 +26,17 @@ namespace API.Context
         {
             //Configure default schema
             modelBuilder.HasDefaultSchema("dev");
+            base.OnModelCreating(modelBuilder);
+        }
+
+        public IDbConnection DapperConnection()
+        {
+            var connectionString = Configuration.GetConnectionString("PostgreSql");
+            return new NpgsqlConnection(connectionString);
         }
 
         // DbSets
-        public DbSet<User> Users { get; set; }
-
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }
