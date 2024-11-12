@@ -2,7 +2,6 @@
 using API2.Entities;
 using API2.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace API2.Repositories.Implementations
 {

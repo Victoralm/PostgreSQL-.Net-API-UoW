@@ -32,9 +32,7 @@ builder.Services.AddAuthorizationBuilder();
 builder.Services.AddDbContext<PostgreContext>();
 builder.Services.AddIdentityCore<IdentityUser>().AddEntityFrameworkStores<PostgreContext>().AddApiEndpoints();
 
-//builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-//builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 

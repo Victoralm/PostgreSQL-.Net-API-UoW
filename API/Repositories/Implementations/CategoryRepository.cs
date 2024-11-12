@@ -1,8 +1,8 @@
 ﻿using API2.Context;
 using API2.Entities;
 using API2.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Dapper;
+using System.Data;
 using static Dapper.SqlMapper;
 
 namespace API2.Repositories.Implementations
@@ -13,6 +13,7 @@ namespace API2.Repositories.Implementations
 
         public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
+            using var connection = _context.DapperConnection();
             #region EF
             //try
             //{
@@ -22,7 +23,6 @@ namespace API2.Repositories.Implementations
             #region Dapper
             try
             {
-                using var connection = _context.DapperConnection();
                 var sql = """
                     SELECT * FROM dev."Categories" ORDER BY "Id" ASC
                     """;
@@ -38,10 +38,10 @@ namespace API2.Repositories.Implementations
 
         public async Task<Category?> GetCategoryByIdAsync(Guid Id)
         {
+            using var connection = _context.DapperConnection();
             #region Dapper
             try
             {
-                using var connection = _context.DapperConnection();
                 var sql = """
                     SELECT * FROM dev."Categories" WHERE id = @Id
                     """;
@@ -59,25 +59,34 @@ namespace API2.Repositories.Implementations
 
         public override async Task<bool> Add(Category entity)
         {
+            using var connection = _context.DapperConnection();
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
             try
             {
-                using var connection = _context.DapperConnection();
                 var sql = """
                     INSERT INTO dev."Categories" ("Id", "Name") VALUES (@Id, @Name)
                     """;
                 await connection.QueryAsync<Category>(sql, 
-                    new { Id = Guid.NewGuid(), Name = entity.Name, });
+                    new { Id = entity.Id, Name = entity.Name, });
+                transaction.Commit();
+                connection.Close();
                 return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "{Repo} Add function error", typeof(CategoryRepository));
+                transaction.Rollback();
+                connection.Close();
                 return false;
             }
         }
 
         public override async Task<bool> Upsert(Category entity)
         {
+            using var connection = _context.DapperConnection();
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
             #region EF
             //try
             //{
@@ -95,23 +104,29 @@ namespace API2.Repositories.Implementations
             #region Dapper
             try
             {
-                using var connection = _context.DapperConnection();
                 var sql = """
                     UPDATE dev."Categories" SET "Name" = @Name WHERE "Id" = @Id
                     """;
                 await connection.QueryAsync<Category>(sql, new { Id = entity.Id, Name = entity.Name });
+                transaction.Commit();
+                connection.Close();
                 return true;
             }
             #endregion
             catch (Exception ex)
             {
                 _logger.LogError(ex, "{Repo} Upsert function error", typeof(CategoryRepository));
+                transaction.Rollback();
+                connection.Close();
                 return false;
             }
         }
 
         public override async Task<bool> Delete(Guid id)
         {
+            using var connection = _context.DapperConnection();
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
             #region EF
             //try
             //{
@@ -128,17 +143,20 @@ namespace API2.Repositories.Implementations
             #region Dapper
             try
             {
-                using var connection = _context.DapperConnection();
                 var sql = """
                     DELETE FROM dev."Categories" WHERE "Id" = @Id
                     """;
                 await connection.QueryAsync<Category>(sql, new { Id = id });
+                transaction.Commit();
+                connection.Close();
                 return true;
             }
             #endregion
             catch (Exception ex)
             {
                 _logger.LogError(ex, "{Repo} Delete function error", typeof(CategoryRepository));
+                transaction.Rollback();
+                connection.Close();
                 return false;
             }
         }

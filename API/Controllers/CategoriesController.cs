@@ -24,6 +24,10 @@ namespace API2.Controllers
         public async Task<IActionResult> Get()
         {
             var items = await _unitOfWork.Category.GetCategoriesAsync();
+
+            if (items == null)
+                return NotFound();
+
             return Ok(items);
         }
 
