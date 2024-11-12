@@ -6,9 +6,9 @@ Example of a setup with PostgreSQL, .Net 8.0 and Angular 18, using the Unit of W
 
 > Database: [PostgreSQL 17](https://www.postgresql.org/docs/17/index.html)
 
--   Showcasing automatic creation of a Database, Schema and tables with Migrations
+-   Showcasing automatic creation of a Database, Schema and tables with Migrations ![alt text](<img/tests - dev.png>)
 
-> Backend: [.Net 8.0](https://learn.microsoft.com/pt-br/dotnet/core/whats-new/dotnet-8/overview)
+    > Backend: [.Net 8.0](https://learn.microsoft.com/pt-br/dotnet/core/whats-new/dotnet-8/overview)
 
 -   Showcasing Unit of Work pattern
 -   Showcasing Entity Framework
