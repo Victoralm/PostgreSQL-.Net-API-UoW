@@ -6,14 +6,14 @@ Example of a setup with PostgreSQL, .Net 8.0 and Angular 18, using the Unit of W
 
 > Database: [PostgreSQL 17](https://www.postgresql.org/docs/17/index.html)
 
--   Showcasing automatically creation of a Database, Schema and tables with Migrations
+-   Showcasing automatic creation of a Database, Schema and tables with Migrations
 
 > Backend: [.Net 8.0](https://learn.microsoft.com/pt-br/dotnet/core/whats-new/dotnet-8/overview)
 
 -   Showcasing Unit of Work pattern
 -   Showcasing Entity Framework
     -   Showcasing Migrations
--   Showcasing Dapper on [CategoryRepository](API\Repositories\Implementations\CategoryRepository.cs)
+-   Showcasing Dapper on [CategoryRepository](API/Repositories/Implementations/CategoryRepository.cs)
     -   Showcasing Database Transactions
 
 > Frontend: [Angular 18](https://blog.angular.dev/angular-v18-is-now-available-e79d5ac0affe)
@@ -85,8 +85,10 @@ ALTER TABLE IF EXISTS dev.users
 
 ### Nuget Packages
 
+-   Dapper
 -   Microsoft.EntityFrameworkCore
 -   Microsoft.EntityFrameworkCore.Tools
+-   Microsoft.EntityFrameworkCore.Design
 -   Microsoft.Extensions.DependencyInjection
 -   Npgsql.EntityFrameworkCore.PostgreSQL
 -   System.ComponentModel.Annotations
